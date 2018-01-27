@@ -1,8 +1,8 @@
 import { combineReducers } from 'redux';
-import friendReducer from './friendReducer';
+import { friendsReducer } from './friendsReducer';
+import { friendReducer } from './friendReducer';
 
-const friendsApp = combineReducers({
-	friends: friendReducer
-})
-
-export default friendsApp;
+export default combineReducers({
+	friendReducer,
+	friendsReducer
+});

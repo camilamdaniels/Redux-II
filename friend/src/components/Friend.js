@@ -1,8 +1,14 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import React from 'react';
 
-export default (props) => {
+export default function Friend(props) {
 	return (
-		<li>{this.props.friend.value}</li>
+		<div>
+			<h4>{props.selected.name}</h4>
+			<div>{props.selected.age}</div>
+			<div>{props.selected.email}</div>
+			<button onClick={() => props.handleDeleteFriend()}>
+				{`Delete ${props.selected.name}`}
+			</button>
+		</div>
 	);
 }

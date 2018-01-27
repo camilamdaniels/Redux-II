@@ -1,20 +1,67 @@
-// i think we'll be using this file to display the full list of friends. 
-// maybe it should only consist of a render function? to render the friends component
-
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { addFriend } from '../actions';
+import './App.css';
+import logo from './logo.svg';
 import Friend from './Friend';
+import { connect } from 'react-redux';
+import { deleteFriend, updateFriend, toggleShowUpdate } from '../actions';
+import UpdateFriendForm from './UpdateFriendForm';
 
-// the implementation is inaccurate! it is a reflection of my current level of understanding
-// i have to figure out how to access the data stored on state in order to render a list of friends
-// i may have to use a map function so that i render a new div for each friend stored on props
+class Friends extends Component {
+	handleDeleteFriend = () => { 
+		const { id } = this.props.friendSelected;
+		this.props.deleteFriend(id);
+	}
 
-export default (props) => {
-	const friends = props.friends.map((friend, i) => <Friend friend={friend} key={i} index={i}/>);
-	return (
-		<ul>
-			{ friends }
-		</ul>
-	);
+	handleShowFriend = friend => {
+		this.props.updateFriend(friend);
+	}
+
+	toggleShowUpdate = () => {
+		this.props.toggleShowUpdate();
+	}
+
+	render() {
+		return (
+			<div>
+				<ul>
+					{this.props.friends.map(friend => {
+						return (
+							<li onClick={() => this.handleShowFriend(friend)} key={friend.id}>
+								{friend.name}
+							</li>
+						);
+					})}
+				</ul>
+				{Object.keys(this.props.friendSelected).length > 0 ? (
+					<Friend 
+						handleShowFriend={this.handleShowFriend}
+						toggleShowUpdate={this.toggleShowUpdate}
+						handleDeleteFriend={this.handleDeleteFriend}
+						selected={this.props.friendSelected}
+					/>
+				) : null}
+				{this.props.showUpdate ? (
+					<UpdateFriendForm friend={this.props.friendSelected} />
+					) : null}
+				{this.props.deletingFriend ? (
+					<img src={logo} className="App-logo" alt="logo"/>
+					) : null}
+			</div>
+		);
+	}
+}
+
+const mapStateToProps = state => {
+	return {
+		deletingFriend: state.friendsReducer.deletingFriend,
+		error: state.friendsReducer.error,
+		showUpdate: state.friendReducer.showUpdate,
+		friendSelected: state.friendReducer.friendSelected
+	};
 };
+
+export default connect(mapStateToProps, {
+	deleteFriend,
+	updateFriend,
+	toggleShowUpdate
+})(Friends);

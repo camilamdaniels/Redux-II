@@ -1,11 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import friendsApp from './reducers/index';
-import App from './App';
+import './index.css';
+import App from './components/App';
+import registerServiceWorker from './registerServiceWorker';
 import { Provider } from 'react-redux';
-import { createStore } from 'redux';
+import { createStore, applyMiddleware } from 'redux';
+import rootReducer from './reducers';
+import logger from 'redux-logger';
+import thunk from 'redux-thunk';
 
-const store = createStore(friendsApp);
+const store = createStore(rootReducer, applyMiddleware(thunk, logger));
 
 ReactDOM.render(
 	<Provider store={store}>
@@ -13,3 +17,4 @@ ReactDOM.render(
 	</Provider>,
 	document.getElementById('root')
 );
+registerServiceWorker();
